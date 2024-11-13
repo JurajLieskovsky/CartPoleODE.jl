@@ -1,0 +1,10 @@
+name = "CartPoleODE"
+uuid = "e298af44-abc3-4c5d-b59c-9d5fcd78a32d"
+authors = ["Juraj Lieskovský <lieskovsky.juraj@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
+
+[compat]
+StaticArrays = "1.9.8"
