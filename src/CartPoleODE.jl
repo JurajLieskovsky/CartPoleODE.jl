@@ -12,7 +12,7 @@ struct Model
     l    # m - length of the pole
 end
 
-function f(m, x, u)
+function f!(m, ẋ, x, u)
     M = @SMatrix [
         m.m_c+m.m_p m.m_p*m.l*cos(x[2])
         m.m_p*m.l*cos(x[2]) m.m_p*m.l^2
@@ -23,7 +23,8 @@ function f(m, x, u)
         -m.g * m.m_p * m.l * sin(x[2])
     ]
 
-    return vcat(x[3:4], M \ τ)
+    @views ẋ[1:2] .= x[3:4]
+    @views ẋ[3:4] .= M \ τ
 end
 
 end # module CartPoleODE
