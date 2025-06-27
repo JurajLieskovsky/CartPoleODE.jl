@@ -12,16 +12,26 @@ struct Model
     l    # m - length of the pole
 end
 
-function f!(m, ẋ, x, u)
-    M = @SMatrix [
-        m.m_c+m.m_p m.m_p*m.l*cos(x[2])
-        m.m_p*m.l*cos(x[2]) m.m_p*m.l^2
-    ]
+mass_matrix(m, x) = @SMatrix [
+    m.m_c+m.m_p m.m_p*m.l*cos(x[2])
+    m.m_p*m.l*cos(x[2]) m.m_p*m.l^2
+]
 
-    τ = @SVector [
-        m.m_p * m.l * sin(x[2]) * x[4]^2 + u[1],
-        -m.g * m.m_p * m.l * sin(x[2])
-    ]
+torque_vector(m, x, u) = @SVector [
+    m.m_p * m.l * sin(x[2]) * x[4]^2 + u[1],
+    -m.g * m.m_p * m.l * sin(x[2])
+]
+
+function f(m, x, u)
+    M = mass_matrix(m, x)
+    τ = torque_vector(m, x, u)
+
+    return vcat(x[3:4], M \ τ)
+end
+
+function f!(m, ẋ, x, u)
+    M = mass_matrix(m, x)
+    τ = torque_vector(m, x, u)
 
     @views ẋ[1:2] .= x[3:4]
     @views ẋ[3:4] .= M \ τ
