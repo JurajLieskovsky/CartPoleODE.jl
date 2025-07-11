@@ -10,6 +10,7 @@ struct Model
     m_c  # kg - mass of the cart
     m_p  # kg - mass of the point-mass 
     l    # m - length of the pole
+    b_p 
 end
 
 mass_matrix(m, x) = @SMatrix [
@@ -19,7 +20,7 @@ mass_matrix(m, x) = @SMatrix [
 
 torque_vector(m, x, u) = @SVector [
     m.m_p * m.l * sin(x[2]) * x[4]^2 + u[1],
-    -m.g * m.m_p * m.l * sin(x[2])
+    -m.g * m.m_p * m.l * sin(x[2]) - m.b_p * x[4]
 ]
 
 function f(m, x, u)
